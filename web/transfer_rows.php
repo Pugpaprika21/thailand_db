@@ -8,12 +8,12 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
-    .custom-select {
-        background-color: #f8f9fa;
-        border: 2px solid #6c757d;
-        color: #495057;
-    }
-</style>
+        .custom-select {
+            background-color: #f8f9fa;
+            border: 2px solid #6c757d;
+            color: #495057;
+        }
+    </style>
 </head>
 
 <body>
@@ -57,8 +57,17 @@
                 success: function(response) {
                     if (response.data.length > 0) {
                         let select = `<option value="0" selected>Select province</option>`;
-                        response.data.forEach((province) => {
-                            select += `<option value="${province.id}">${province.name_in_thai}</option>`;
+                        response.data.forEach((data) => {
+                            select += `
+                            <option 
+                                value="${data.id}"
+                                data-province_id="${data.id}"
+                                data-code="${data.code}"
+                                data-name_in_thai="${data.name_in_thai}"
+                                data-name_in_english="${data.name_in_english}"
+                            >
+                                ${data.name_in_thai}
+                            </option>`;
                         });
                         $("#province_id").html(select);
                     }
@@ -68,44 +77,43 @@
 
         $(document).ready(function() {
             lovProvinces();
-            $('#addItem').click(function() {
-                let province_id = $('#province_id').val();
-                let province_name = $('#province_id option:selected').text();
+            // $('#addItem').click(function() {
+            //     let province_id = $('#province_id').val();
+            //     let province_name = $('#province_id option:selected').text();
 
-                if (province_id && province_id !== "0") {
-                    if ($('#row-' + province_id).length === 0) {
-                        $('#dataTable tbody').append(`
-                            <tr id="row-${province_id}">
-                                <td>${province_id}</td>
-                                <td>${province_name}</td>
-                                <td><button class="btn btn-danger btn-sm removeRow">ลบ</button></td>
-                            </tr>
-                        `);
-                    }
-                } else {
-                    alert('กรุณาเลือกรายการ');
-                }
-            });
+            //     if (province_id && province_id !== "0") {
+            //         if ($('#row-' + province_id).length === 0) {
+            //             $('#dataTable tbody').append(`
+            //                 <tr id="row-${province_id}">
+            //                     <td>${province_id}</td>
+            //                     <td>${province_name}</td>
+            //                     <td><button class="btn btn-danger btn-sm removeRow">ลบ</button></td>
+            //                 </tr>
+            //             `);
+            //         }
+            //     } else {
+            //         alert('กรุณาเลือกรายการ');
+            //     }
+            // });
 
-            $(document).on('click', '.removeRow', function() {
-                $(this).closest('tr').remove();
-            });
+            // $(document).on('click', '.removeRow', function() {
+            //     $(this).closest('tr').remove();
+            // });
 
             // event handlers
-            $("#province_id").change(function (e) { 
+            $("#province_id").change(function(e) {
                 e.preventDefault();
-                
-                let province_id = $('#province_id').val();
-                let province_name = $('#province_id option:selected').text();
-                // province_id เรียก api อื่นๆ เพื่อดึง ฟิลล์ที่ต้องการเพิ่ม
+
+                let selectedOption = $('#province_id option:selected');
+                let province_id = selectedOption.val();
+                let province_name = selectedOption.text();
+                let code = selectedOption.data('code');
+                let name_in_english = selectedOption.data('name_in_english');
+
                 if (province_id && province_id !== "0") {
                     if ($('#row-' + province_id).length === 0) {
                         $('#dataTable tbody').append(`
-                            <tr 
-                                id="row-${province_id}"
-                                data-province_id="${province_id}"
-                                data-province_name="${province_name}"
-                            >
+                            <tr id="row-${province_id}" data-province_id="${province_id}" data-province_name="${province_name}">
                                 <td>${province_id}</td>
                                 <td>${province_name}</td>
                                 <td><button class="btn btn-danger btn-sm removeRow">ลบ</button></td>
