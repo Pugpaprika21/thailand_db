@@ -97,7 +97,7 @@
                 
                 let province_id = $('#province_id').val();
                 let province_name = $('#province_id option:selected').text();
-
+                // province_id เรียก api อื่นๆ เพื่อดึง ฟิลล์ที่ต้องการเพิ่ม
                 if (province_id && province_id !== "0") {
                     if ($('#row-' + province_id).length === 0) {
                         $('#dataTable tbody').append(`
